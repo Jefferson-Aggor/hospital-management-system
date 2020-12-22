@@ -79,8 +79,12 @@ const assignDoctor = async (req,res,next)=>{
         if(!patient){
             return res.status(400).json({status:"Failed",data:"Member not found"})
         }
+
+        if(!patient.paid){
+            return res.status(400).json({status:"Failed",data:"Patient must pay before seeing a doctor"})
+        }
         
-        const doctor = await Worker.findOne({...req.query, role:doctor});
+        const doctor = await Worker.findOne({...req.body, role:"doctor"});
 
         if(!doctor){
             return res.status(400).json({status:"Failed",data: "Invalid Doctor"})
@@ -91,6 +95,7 @@ const assignDoctor = async (req,res,next)=>{
         res.status(200).json({status:"success",data:patient})
 
     } catch (error) {
+        console.log(error)
         return res.status(400).json({status:"Failed",data:"Server Error"})
     }
     

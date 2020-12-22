@@ -49,38 +49,38 @@ const UserSchema = new schema({
     },
     assigned_doctor: {
         type: schema.Types.ObjectId,
-        ref : "Worker"
+        ref : "Workers"
     },
     consultation: {
-        diagnosis: [{
-            symptoms: {
-                type: String,
-
-            },
-            prescriptions:[{
-                type:String,
-            }],
-            referToLab: {
-                type:Boolean,
-                default:false
-            },
-            lab_tests: {
-                titles: [
-                    {type:String}
-                ]
-            },
-            date : {
-                type:Date,
-                default: Date.now
+        diagnosis: 
+            {
+                symptoms: {
+                    type: String,
+                },
+                prescriptions:{
+                    type:String,
+                },
+                referToLab: {
+                    type:Boolean,
+                    default:false
+                },
+                lab_tests: {
+                    type:String
+                },
+                date : {
+                    type:Date,
+                    default: Date.now
+                }
             }
-        }]
+    
     },
-    lab_results: [{
-        titles:{type:String}
-    }],
-    paidForLab: {
-        type: Boolean,
-        default: false
+    
+    lab_results: {
+        titles:{type:String},
+        paidForLab: {
+            type: Boolean,
+            default: false
+        }
     },
     joinedAt: {
         type: Date,

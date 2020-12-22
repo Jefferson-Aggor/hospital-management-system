@@ -2,59 +2,65 @@ const Patient = require('../models/User');
 
 const consultation = async (req,res,next)=>{
     try {
+
         const {symptoms,prescriptions,referToLab,lab_tests} = req.body;
 
-        const patient = await Patient.findById(req.params._id).populate('assigned_doctor');
+        let patient = await Patient.findById(req.params._id).populate('assigned_doctor');
         if(!patient){
             return res.status(400).json({status:"Failed",data:"Patient not found"})
         }
 
-        patient.diagnosis.map((diagnose)=> {
-            try {
-                diagnose.symptoms = symptoms;
-                disgnsose.prescriptions = prescriptions;
+        patient.consultation.diagnosis.symptoms = symptoms;
+        patient.consultation.diagnosis.prescriptions = prescriptions;
 
-                if(referToLab == 'yes'){
-                    diagnose.referToLab = true
+        if(referToLab == 'yes'){
+            patient.consultation.diagnosis.referToLab = true;
 
-                    diagnose.lab_tests.map(test =>{
-                        test.titles = lab_tests
+            patient.consultation.diagnosis.lab_tests = lab_tests;
+            patient.save()
+        }else{
+            patient.consultation.diagnosis.referToLab = false;
 
-                        diagnose.save();
-                        res.status(200).json({status:"success",data:patient})
-                    })
-                }else{
-                    diagnose.save();
-                    res.status(200).json({status:"success",data:patient})
-                }
+            patient.consultation.diagnosis.lab_tests = '';
+            patient.save()
+        }
 
         
-            } catch (err) {
-                res.status(400).json({status:"Failed",data:"Could not save diagnosis"})
-            }
-        })
-
-
+        
+        res.status(200).json({status:'success',data:patient})
+       
     } catch (err) {
+        console.log(err)
         res.status(400).json({status:"Failed",data:"Error from server"})
     }
 }
 
 const lab = async(req,res,next) => {
     try {
-        const {lab_results} = req.body;
+        const {lab_results,paid_for_lab} = req.body;
         const patient = await Patient.findById(req.params._id);
+
         if(!patient){
             return res.status(400).json({status:"Failed",data:"Patient not found"})
         }
 
-        patient.lab_results.map(result => {
-            result.titles = lab_results
+        if(patient.consultation.diagnosis.referToLab == true){
+            
+            if(paid_for_lab == 'yes'){
+                patient.lab_results.paidForLab = true;
+                patient.lab_results.titles = lab_results;
+            }else{
+                patient.lab_results.paidForLab = false;
+                patient.lab_results.titles = "";
+            }
 
-            result.save();
-            res.status(200).json({status:"success",data:patient})
-        })
-
+            patient.save()
+            res.status(200).json({status:'success',data:patient})
+        }else{
+            res.status(400).json({status:"failed",data:'Patient was not referred to lab'})
+        }
+        
+        
 
     } catch (err) {
         res.status(400).json({status:"Failed",data:"Error from server"})
