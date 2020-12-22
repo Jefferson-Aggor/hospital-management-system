@@ -82,6 +82,10 @@ const UserSchema = new schema({
             default: false
         }
     },
+    paidForDrugs: {
+        type: Boolean,
+        default:false
+    },
     joinedAt: {
         type: Date,
         default: Date.now

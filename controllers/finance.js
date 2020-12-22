@@ -52,4 +52,30 @@ const checkPaid = async(req,res,next)=>{
     }
 }
 
-module.exports = {getPatientById,checkPaid}
+const checkPaidForDrugs = async (req,res,next)=>{
+    const {_id} = req.params
+
+    try {
+        const patient = await Patient.findOne({_id});
+
+        if(!patient){
+            return res.status(400).json({status:"Failed",data:"User not found"})
+        }
+
+        if(req.body.paid != "paid"){
+            patient.paidForDrugs = false;
+            patient.save()
+           return res.status(200).json({status:'success',data:patient,paid:"Not paid"})
+        }
+
+        patient.paidForDrugs = true;
+        patient.save()
+        res.status(200).json({status:'success',data:patient,paid:"paid"})
+
+    } catch (err) {
+        console.log(err.message)
+        return res.status(400).json({status:"Failed",data:"Server error"})
+    }
+}
+
+module.exports = {getPatientById,checkPaid,checkPaidForDrugs}
