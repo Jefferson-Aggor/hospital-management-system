@@ -1,5 +1,8 @@
 const dotenv = require('dotenv');
 const express = require('express');
+const hpp = require('hpp');
+const helmet = require('helmet');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 const app = express();
@@ -9,6 +12,9 @@ dotenv.config();
 //Middlewares
 app.use(cookieParser());
 
+app.use(cors())
+app.use(helmet());
+app.use(hpp())
 // Files
 const {connectDB} = require('./config/db');
 
