@@ -44,7 +44,7 @@ const registerWorker = async (req,res,next)=>{
 
         const worker = await Worker.create(req.body)
         
-       sendTokenResponse(worker,200,res)
+       res.status(200).json({status:'success',data:worker})
 
     } catch (err) {
         console.log(err)

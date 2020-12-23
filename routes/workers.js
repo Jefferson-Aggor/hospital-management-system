@@ -14,7 +14,7 @@ router.route('/:_id')
 .delete(protect,authorize('admin'),deleteWorker);
 
 // AUTH
-router.post('/register',authorize('admin'),registerWorker);
+router.post('/register',protect,authorize('admin'),registerWorker);
 
 router.post('/login',loginWorker);
 
