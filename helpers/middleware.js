@@ -29,4 +29,13 @@ const protect = async (req,res,next)=>{
 
 }
 
-module.exports = {protect}
+const authorize = (...roles)=>{
+    return (req,res,next)=>{
+        if(!roles.includes(req.user.role)){
+           return res.status(403).json({status:"failed",data:`${req.user.role} not authorized for this route`})
+        }
+        next()
+    }
+}
+
+module.exports = {protect,authorize}

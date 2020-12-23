@@ -45,7 +45,7 @@ const workersSchema = new schema({
     role: {
         type:String,
         lowercase:true,
-        enum: ['doctor','receptionist','nurse','lab technician','pharmacist','cleaner','security'],
+        enum: ['doctor','receptionist','nurse','lab technician','pharmacist','cleaner','security','cashier'],
         required: [true,'Please provide a role']
     },
     password:{type:String,required:true,minlength:[6, "Password must be 6 chars or more"]},
