@@ -20,7 +20,7 @@ const getMembers = async (req,res,next)=>{
 
         res.status(200).json({status:'success',count:members.length ,data:members})
     } catch (err) {
-        
+        console.log(err)
     }
 }
 
@@ -63,7 +63,7 @@ const getMember = async (req,res,next)=>{
 
     } catch (err) {
 
-        console.log(err.message);
+        console.log(err);
         return res.status(400).json({status:"Failed",data:"Server error, Try again"})
 
     }

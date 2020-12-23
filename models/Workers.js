@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
 const schema = mongoose.Schema;
 
 const workersSchema = new schema({
@@ -23,6 +24,7 @@ const workersSchema = new schema({
     },
     email:{
         type: String,
+        unique:true,
         required: true,
         match:[
             /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
@@ -63,6 +65,18 @@ workersSchema.pre('save', async function(next){
 
     this.password = hash;
 })
+
+workersSchema.methods.getSignJwtToken = function(){
+    return jwt.sign({_id: this._id},process.env.JWT_SECRET,{
+        expiresIn: process.env.JWT_EXPIRESIN
+    })
+}
+
+workersSchema.methods.matchPassword = async function(enteredPassword){
+    const compare = await bcrypt.compare(enteredPassword,this.password)
+
+    return compare;
+}
 
 const workers = mongoose.model('Workers',workersSchema);
 

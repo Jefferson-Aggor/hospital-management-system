@@ -30,7 +30,7 @@ const consultation = async (req,res,next)=>{
         res.status(200).json({status:'success',data:patient})
        
     } catch (err) {
-        console.log(err)
+        console.log(err.message)
         res.status(400).json({status:"Failed",data:"Error from server"})
     }
 }
@@ -63,6 +63,7 @@ const lab = async(req,res,next) => {
         
 
     } catch (err) {
+        console.log(err.message)
         res.status(400).json({status:"Failed",data:"Error from server"})
     }
 }

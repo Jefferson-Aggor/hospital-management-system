@@ -1,11 +1,20 @@
 const express = require('express')
 const router = express.Router();
 
-const { getWorkers,getWorker,updateWorker,deleteWorker,registerWorker } = require('../controllers/workers')
+const { getWorkers,getWorker,updateWorker,deleteWorker,registerWorker,loginWorker, logoutWorker } = require('../controllers/workers');
+
+const {protect} = require('../helpers/middleware')
 
 // Get all workers
-router.route('/').get(getWorkers).post(registerWorker);
+router.route('/').get(protect,getWorkers)
 
-router.route('/:_id').get(getWorker).put(updateWorker).delete(deleteWorker);
+router.route('/:_id').get(protect, getWorker).put(protect, updateWorker).delete(protect,deleteWorker);
+
+// AUTH
+router.post('/register',registerWorker);
+
+router.post('/login',loginWorker);
+
+router.get('/user/logout',protect,logoutWorker);
 
 module.exports = router;

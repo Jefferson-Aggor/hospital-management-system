@@ -20,7 +20,7 @@ const getPatientById = async (req,res,next)=>{
 
         res.status(200).json({status:"success",data:patient})
     } catch (err) {
-        
+        console.log(err.message)
     }
 }
 
@@ -47,7 +47,7 @@ const checkPaid = async(req,res,next)=>{
         res.status(200).json({status:'success',data:patient,paid:"paid"})
 
     } catch (err) {
-        console.log(err.message)
+        console.log(err)
         return res.status(400).json({status:"Failed",data:"Server error"})
     }
 }
@@ -73,7 +73,7 @@ const checkPaidForDrugs = async (req,res,next)=>{
         res.status(200).json({status:'success',data:patient,paid:"paid"})
 
     } catch (err) {
-        console.log(err.message)
+        console.log(err)
         return res.status(400).json({status:"Failed",data:"Server error"})
     }
 }

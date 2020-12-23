@@ -27,23 +27,24 @@ const getWorkers = async (req,res,next)=>{
             return res.status(400).json({status: "failed",data:"Failed to get workers"});
         }
 
-        res.status(200).json({status:'success',data: workers})
+        res.status(200).json({status:'success',count:workers.length, data: workers})
     } catch (err) {
+        console.log(err)
         res.status(400).json({status: "failed",data:"Internal server error"});
     }
 }
 
 
-// PATH         /api/workers/
+// PATH         /api/workers/register
 // METHOD       POST
 // DESC         Register workers
 const registerWorker = async (req,res,next)=>{
     try {
         // const {firstname,middlename,lastname,role,area_of_residence,emergency_contact,email,marital_status,date_of_birth} = req.body;
 
-        const workers = await Worker.create(req.body)
-
-        res.status(200).json({status: "success",data: workers})
+        const worker = await Worker.create(req.body)
+        
+       sendTokenResponse(worker,200,res)
 
     } catch (err) {
         console.log(err)
@@ -65,6 +66,7 @@ const getWorker = async (req,res,next)=>{
         res.status(200).json({status:'success',data:worker})
 
     } catch (err) {
+        console.log(err)
         res.status(400).json({status: "failed",data:"Server Error"});
     }
 }
@@ -100,6 +102,7 @@ const updateWorker = async (req,res,next)=>{
 
 
     } catch (err) {
+        console.log(err)
         res.status(501).json({status: "failed",data:"Server Error"});
     }
 }
@@ -120,14 +123,72 @@ const deleteWorker = async (req,res,next)=>{
 
     res.status(200).json({status:'success',data:"Worker deleted successfully"})
     } catch (err) {
+        console.log(err)
         res.status(501).json({status: "failed",data:"Server Error"});
     }
 }
 
-// PATH         /api/login
+// PATH         /api/workers/login
 // METHOD       POST
 // DESC         Login a worker
 
+const loginWorker = async (req,res,next)=>{
+    try {
+        const {email,password} = req.body;
+
+        const worker = await Worker.findOne({email});
+
+        if(!email || !password){
+            return res.status(400).json({status: "failed",data:"Validation failed"});
+        }
+
+        if(!worker){
+            return res.status(400).json({status: "failed",data:"Failed to get worker"});
+        }
+
+        const match = await worker.matchPassword(password);
 
 
-module.exports = {getWorkers, registerWorker, getWorker,updateWorker,deleteWorker}
+        if(!match){
+            return res.status(400).json({status: "failed",data:"Validation failed"});
+        }
+
+        
+        sendTokenResponse(worker,200,res)
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+// PATH         /api/workers/logout
+// METHOD       GET
+// DESC         Logout a worker;
+
+const logoutWorker = (req,res,next)=>{
+    res.cookie("token",'',{expires: new Date(Date.now() + (1 * 1000)) , httpOnly:true}) 
+    res.status(200).json({status:'success', data:"You have successfully logged out"})
+}
+
+
+// Send cookie
+
+const sendTokenResponse = async (model,statusCode,res)=>{
+    const token = model.getSignJwtToken();
+
+    const options = {
+        expires: new Date(Date.now() + (process.env.JWT_COOKIE_EXPIRESIN * 24 * 60 * 60 * 1000)),
+        httpOnly: true
+    }
+
+    if(process.env.NODE_ENV === 'production'){
+        options.secure = true
+    }
+
+    res
+    .status(statusCode)
+    .cookie('token',token,options)
+    .json({status:'success',token})
+} 
+
+module.exports = {getWorkers, registerWorker, getWorker,updateWorker,deleteWorker,loginWorker,logoutWorker}

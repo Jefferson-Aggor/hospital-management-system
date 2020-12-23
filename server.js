@@ -1,9 +1,13 @@
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
 const express = require('express');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 dotenv.config();
+
+//Middlewares
+app.use(cookieParser());
 
 // Files
 const {connectDB} = require('./config/db');
