@@ -27,7 +27,9 @@ router
 // router.route('/api/members/:_id').get(getMember)
 
 // Register a new member
-router.route("/api/register").post(protect, registerUser);
+router
+  .route("/api/register")
+  .post(protect, authorize("admin", "receptionist"), registerUser);
 
 // Payment
 router
