@@ -14,16 +14,16 @@ const {
 const { protect, authorize } = require("../helpers/middleware");
 
 // Get all workers
-router.route("/").get(protect, authorize("admin"), getWorkers);
+router.route("/").get(protect, getWorkers);
 
 router
   .route("/:_id")
   .get(protect, getWorker)
-  .put(protect, authorize("admin"), updateWorker)
-  .delete(protect, authorize("admin"), deleteWorker);
+  .put(protect, updateWorker)
+  .delete(protect, deleteWorker);
 
 // AUTH
-router.post("/register", registerWorker);
+router.post("/register", protect, registerWorker);
 
 router.post("/login", loginWorker);
 
