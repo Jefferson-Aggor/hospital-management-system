@@ -16,38 +16,38 @@ const {
 const { consultation, lab } = require("../controllers/doctor");
 const { receipt, handOverMedicine } = require("../controllers/pharmarcy");
 
-const { protect } = require("../helpers/middleware");
+
 
 // Get All Patients
-router.route("/api/members").get(protect, getMembers);
+router.route("/api/members/").get(getMembers);
 
 //Get a patient
 // router.route('/api/members/:_id').get(getMember)
 
 // Register a new member
-router.route("/api/register").post(protect, registerUser);
+router.route("/api/register/").post(registerUser);
 
 // Payment
 router
   .route("/api/payment/:_id")
-  .get(protect, getPatientById)
-  .put(protect, checkPaid);
+  .get(getPatientById)
+  .put(checkPaid);
 
 // Pay for drugs
-router.route("/api/payment/drugs/:_id").put(protect, checkPaidForDrugs);
+router.route("/api/payment/drugs/:_id").put(checkPaidForDrugs);
 // Assign Doctor
-router.route("/api/user/assign_doctor/:_id").put(protect, assignDoctor);
+router.route("/api/user/assign_doctor/:_id").put(assignDoctor);
 
 // Consultation
-router.route("/api/user/:_id/consultation").put(protect, consultation);
+router.route("/api/user/:_id/consultation").put(consultation);
 
 // Lab
-router.route("/api/user/:_id/lab").put(protect, lab);
+router.route("/api/user/:_id/lab").put(lab);
 
 //Pharmacy
 router
   .route("/api/user/:_id/pharmacy")
-  .get(protect, receipt)
-  .put(protect, handOverMedicine);
+  .get(receipt)
+  .put(handOverMedicine);
 
 module.exports = router;
