@@ -84,14 +84,14 @@ const checkPaidForDrugs = async (req, res, next) => {
 
 const payForlab = async (req, res, next) => {
   try {
-    const { paidForLab } = req.body;
+    const { paid } = req.body;
     const patient = await Patient.findById(req.params._id);
 
     if (!patient) {
       return res.status(400).json({ status: "Failed", data: "User not found" });
     }
 
-    if (paidForLab !== "yes") {
+    if (paid !== "yes") {
       patient.lab_results.paidForLab === false;
       patient.save();
       res.status(200).json({ status: "success", data: patient, paid: "paid" });
