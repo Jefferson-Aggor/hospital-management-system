@@ -94,7 +94,9 @@ const payForlab = async (req, res, next) => {
     if (paid !== "yes") {
       patient.lab_results.paidForLab === false;
       patient.save();
-      res.status(200).json({ status: "success", data: patient, paid: "paid" });
+      res
+        .status(200)
+        .json({ status: "failed", data: patient, paid: "not paid" });
     }
 
     patient.lab_results.paidForLab === true;
