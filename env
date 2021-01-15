@@ -1,0 +1,4 @@
+JWT_COOKIE_EXPIRESIN = 30;
+JWT_SECRET = 0ihojneoshzkjgwerwer00etwqg
+MONGO_URI= mongodb+srv://hospital-management-system:hospital-management-system@hospital-management-sys.vmmur.mongodb.net/hospital-management-system?retryWrites=true&w=majority
+JWT_EXPIRESIN=30d
