@@ -16,6 +16,8 @@ const consultation = async (req, res, next) => {
     patient.consultation.diagnosis.symptoms = symptoms;
     patient.consultation.diagnosis.prescriptions = prescriptions;
 
+    patient.save()
+
     if (referToLab == "yes") {
       patient.consultation.diagnosis.referToLab = true;
 
